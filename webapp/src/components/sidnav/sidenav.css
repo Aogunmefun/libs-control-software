@@ -1,0 +1,74 @@
+.sidenav-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50px;
+    overflow: scroll; */
+    
+    /* overflow-y: scroll; */
+    overflow-x: hidden;
+    width: 50px;
+    height: 100vh;
+    
+    position: fixed;
+    border-right: 1px solid var(--lightGray);
+    background-color: var(--white);
+    transition: all 0.2s;
+    padding-top: 50px;
+    
+    
+}
+.sideContainerout {
+    width: calc(var(--sidenavwidth));
+    animation: expandSidenav 0.5s normal forwards;
+    
+}
+.sidenav-container-expanded {
+    width: calc(var(--sidenavwidth));
+}
+
+.sidenav {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: left; */
+    align-items: flex-start;
+    /* margin-top: 10%; */
+    /* position: fixed; */
+    /* bottom: 0; */
+    width: 100%;
+    /* min-width: 250px; */
+    /* max-width: 250px; */
+    /* height: 0; */
+    /* height: 100vh; */
+    /* padding: 10px; */
+    padding: 10px 0px 10px 0px;
+    /* background-color: var(--white); */
+    /* border-right: 2px solid var(--graylight); */
+    gap: 10px;
+    overflow-x: hidden;
+    
+    
+}
+
+.btn--sidenav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: transparent;
+    color: var(--primaryColor);
+    border: none;
+    padding-left: 10px;
+    border-radius: 0;
+    width: var(--sidenavwidth);
+    gap: 20px;
+}
+
+.btn--sidenav:hover {
+    background-color: #1da0a5c4;
+    color: var(--white);
+}

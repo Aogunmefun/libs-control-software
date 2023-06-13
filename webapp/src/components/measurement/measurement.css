@@ -1,0 +1,69 @@
+.measurement{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    gap: 20px;
+}
+
+.msmSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    min-width: 500px;
+    gap: 50px;
+    border: 1px solid var(--primaryColor);
+    padding: 20px;
+    border-radius: 1rem;
+}   
+
+.msmForm {
+    width: 80%;
+    /* min-width: 700px; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 20px;
+}
+
+.msmName {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.msmName > i:hover {
+    cursor: pointer;
+    color: var(--gray);
+    transition: all 0.2s;
+}
+
+.msmInput {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: flex-start; */
+    align-items: center;
+    width: 100%;
+    /* gap: 20px; */
+}
+
+.msmInput > label {
+    width: 350px;
+    text-align: start;
+}
+
+.msmInput > input {
+    /* width: 500px; */
+}
+
+.unitInput {
+    position: relative;
+    top: 0px;
+    left: -10%;
+    font-family: 'Inter';
+  }

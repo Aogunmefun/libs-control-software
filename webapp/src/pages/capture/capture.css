@@ -1,0 +1,81 @@
+.capture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    gap: 20px;
+}
+
+.measurementInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.measurementInfo > i {
+    transition: all 0.2s;
+}
+
+.measurementInfo > i:hover {
+    cursor: pointer;
+    color: var(--gray);
+}
+
+.sampleLoader {
+    width: 800px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    border: 2px solid var(--gray);
+    border-radius: 1rem;
+    /* flex-wrap: wrap; */
+    padding: 20px;
+    gap: 50px;
+    overflow-y: scroll;
+    /* overflow: visible; */
+}
+
+.capture-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.traySelection {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.selectTrays {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.trayOption {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--primaryColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.trayOption:hover {
+    cursor: pointer;
+    background-color: var(--gray);
+}
+
+.traySelected {
+    background-color: var(--primaryColor);
+}

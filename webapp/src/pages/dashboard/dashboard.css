@@ -1,0 +1,23 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    padding-top: 20px;
+    padding: 50px;
+    padding-left: 100px;
+    height: 100vh;
+    /* overflow-y: scroll; */
+}
+
+.dashboard > h1 {
+    color: var(--primaryColor);
+}
+
+.extra {
+    height: 300px;
+    width: 100%;
+    /* background-color: var(--primaryColor); */
+    border-radius: 2rem;
+    border: 1px solid var(--primaryColor);
+}
