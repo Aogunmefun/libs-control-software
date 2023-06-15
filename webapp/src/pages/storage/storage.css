@@ -1,0 +1,52 @@
+.storage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    gap: 20px;
+    padding-left: 100px;
+}
+
+.storageDrives {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+.storageDrives > button > i {
+    color: var(--primaryColor);
+}
+.storageDrives > button > i:hover {
+    color: var(--gray);
+}
+
+.storageDrive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    width: fit-content;
+    height: 50px;
+    border: 1px solid var(--primaryColor);
+    border-radius: 0.5rem;
+
+}
+
+.storageDrive > p {
+    color: var(--primaryColor);
+}
+
+.addDrive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    top: 30%;
+    left: 42%;
+    width: 300px;
+    height: 200px;
+    border: 1px solid var(--primaryColor);
+    border-radius: 1rem;
+    padding-top: 50px;
+}
+

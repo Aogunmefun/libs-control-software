@@ -9,6 +9,7 @@
     padding-bottom: 50px;
     border-radius: 2rem;
     box-shadow: 0px 0px 10px var(--primaryColor);
+    gap: 20px;
 }
 
 .connectBoxes {
@@ -41,4 +42,16 @@
 
 .connectStatus > i {
     color: var(--primaryColor);
+}
+
+.connectField {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.connectField > select {
+    width: 100px;
+    border: 1px solid var(--gray);
+    border-radius: 0.2rem;
 }

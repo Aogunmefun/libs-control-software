@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./capture.css"
 import { Context } from "../../app";
 import Tray from "../../components/tray/tray"
+import DataRun from "../../components/dataRun/dataRun";
 
 function Capture() {
     
@@ -70,63 +71,15 @@ function Capture() {
     ])
     const [index, setIndex] = useState([0,0])
 
+    useEffect(()=>{
+        app.setPage("capture")
+    },[app])
+
     return(
         <div className="capture">
             <h1>Capture</h1>
-            <h3>Tower 1</h3>
-            <div className="measurementInfo">
-                    
-                {/* <Measurement connected={connected} /> */}
-                {/* <Camera /> */}
-                
-                <i className="material-icons">arrow_back_ios</i>
-                <div className="sampleLoader">
-                    {
-                        trays.map((tray, index)=>{
-                            return(
-                            <Tray key={"tray"+index} 
-                                index={index} 
-                                tray={tray}
-                                setIndex={setIndex} 
-                                current = {app.index[0]===index?true:false}
-                                sampleind = {app.index[1]}  
-                                />
-                            )
-                        })
-                    }
-                </div>
-                <i className="material-icons">arrow_forward_ios</i>
-                
-            </div>
-            <div className="capture-buttons">
-                {
-                   
-                    <button style={{pointerEvents:`${app.connected.some((item)=>!item.state)?"none":""}`}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>
-                }
-                <div className="traySelection">
-                    <button onClick={()=>{
-                        let selectedIndexes = [] 
-                        document.querySelectorAll(".trayOption").forEach((item,ind)=>{
-                            // console.log(item.className)
-                            if (item.className.includes("traySelected")) selectedIndexes.push(ind)
-                        })
-                        console.log("indexes", selectedIndexes)
-                        app.eel.runSelected(selectedIndexes)
-                    }}>Run Selected</button>
-                    <div className="selectTrays">
-                        <div className="trayOption">1</div>
-                        <div className="trayOption">2</div>
-                        <div className="trayOption">3</div>
-                        <div className="trayOption">4</div>
-                        <div className="trayOption">5</div>
-                        <div className="trayOption">6</div>
-                        <div className="trayOption">7</div>
-                        <div className="trayOption">8</div>
-                        <div className="trayOption">9</div>
-                        <div className="trayOption">10</div>
-                    </div>
-                </div>
-            </div>
+            {/* <DataRun trays={trays} /> */}
+            
         </div>
     )
 }

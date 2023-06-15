@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./dashboard.css"
 import Connect from "../../components/connect/connect";
+import { Context } from "../../app";
 
 function DashBoard(props) {
     
+    const app = useContext(Context)
+
+    useEffect(()=>{
+        app.setPage("dashboard")
+    },[app])
 
     return(
         <div className="dashboard">

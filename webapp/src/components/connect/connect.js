@@ -3,10 +3,12 @@ import "./connect.css"
 import { Context } from "../../app";
 import Modal from "../modal/modal"
 
+
 function Connect(props) {
     
     const [busy, setBusy] = useState("")
     const [modal, setModal] = useState({state:false, text:""})
+    const [ports, setCom] = useState("")
 
     const app = useContext(Context)
 
@@ -112,67 +114,42 @@ function Connect(props) {
     return(
         <div className="connect">
             <Modal close={true} modal={modal} setModal={setModal} />
+            {app.page==="devices"?<button className="btn--flat"><i className="material-icons">refresh</i></button>:""}
             <div className="connectBoxes">
-                <div className="connectBox">
-                    <p>Spectrometer</p>
-                    <div className="connectStatus">
-                        {
-                            app.connected.spectrometer?
-                            <i className="material-icons">usb</i>:
-                            <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
-                        }
-                    </div>
-                    {app.connected.spectrometer?
-                        <button className={`${busy?"disabled":""}`} onClick={()=>connectSpectrometer(false)}>Disconnect</button>
-                        : <button className={`${busy?"disabled":""}`} onClick={()=>connectSpectrometer(true)}>Connect</button> }
-                </div>
-                <div className="connectBox">
-                    <p>PDG</p>
-                    <div className="connectStatus">
-                        {/* {"Status:"}
-                        {app.connected.pdg?" Connected":" Not Connected"} */}
-                        {
-                            app.connected.pdg?
-                            <i className="material-icons">usb</i>:
-                            <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
-                        }
-                    </div>
-                    {
-                        app.connected.pdg?
-                        <button className={`${busy?"disabled":""}`} onClick={()=>connectPDG(false)}>Disconnect</button>
-                        :<button className={`${busy?"disabled":""}`} onClick={()=>connectPDG(true)}>Connect</button>
-                    }
-                </div>
-                {/* <div className="connectBox">
-                    <p>Laser</p>
-                    <div className="connectStatus">
-                        {
-                            app.connected.laser?
-                            <i className="material-icons">usb</i>:
-                            <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
-                        }
-                    </div>
-                    {
-                        app.connected.laser?
-                        <button className={`${busy?"disabled":""}`} onClick={()=>connectLaser(false)} >Disconnect</button>
-                        :<button className={`${busy?"disabled":""}`} onClick={()=>connectLaser(true)} >Connect</button>
-                    }
-                </div> */}
-                <div className="connectBox">
-                    <p>Robot</p>
-                    <div className="connectStatus">
-                        {
-                            app.connected.robot?
-                            <i className="material-icons">usb</i>:
-                            <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
-                        }
-                    </div>
-                    {
-                        app.connected.robot?
-                        <button className={`${busy?"disabled":""}`} onClick={()=>connectRobot(false)}>Disconnect</button>
-                        :<button className={`${busy?"disabled":""}`} onClick={()=>connectRobot(true)}>Connect</button>
-                    }
-                </div>
+                {
+                    app.connected.map((device,index)=>{
+                        if (device.device !== "Laser") return(
+                            <div key={"DeviceConnect"+device.device} className="connectBox">
+                                <p>{device.device}</p>
+                                <div className="connectStatus">
+                                    {
+                                        device.status?
+                                        <i className="material-icons">usb</i>:
+                                        <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
+                                    }
+                                </div>
+                                {
+                                    app.page === "devices"?
+                                    <div className="connectField">
+                                        <p>{device.connectType}</p>
+                                        <select >
+                                            <option value=""></option>
+                                            {
+                                                device.options?.map((option,index)=>{
+                                                    return(
+                                                        <option key={"ConnectionOption"+device.connectType+option} value={option}>{option}</option>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                    </div>:""
+                                }
+                                <button onClick={()=>window.server.connect(device.device)} className={"connect"+device.device}>{device.status?"Disconnect":"Connect"}</button>
+                            </div>
+                        )
+                    })
+                }
+                
             </div>
         </div>
     )

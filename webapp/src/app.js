@@ -5,7 +5,11 @@ import HomePage from "./pages/home/homePage";
 import Splash from "./pages/splash/splash";
 import DashBoard from "./pages/dashboard/dashboard";
 import Capture from "./pages/capture/capture";
+import Devices from "./pages/devices/devices";
+import Camera from "./pages/camera/camera";
+import Storage from "./pages/storage/storage";
 import Navbar from "./components/sidnav/sidenav"
+
 
 export const Context = React.createContext()
 
@@ -23,11 +27,17 @@ function App() {
   ])
   const [navbar, setNavbar] = useState(true)
   const [connected, setConnected] = useState([
-    {device: "spectrometer", state: false},
-    {device: "pdg", state: false},
-    {device: "laser", state: false},
-    {device: "robot", state :false}
+    {device: "Spectrometer", state: false, connectType: "Channels", options:[]},
+    {device: "PDG", state: false, connectType: "Port:", options: []},
+    {device: "Laser", state: false},
+    {device: "Robot", state :false, connectType: "IP:", options: []},
   ])
+  const [server, setServer] = useState({
+    connected: false,
+    
+  })
+  const [page, setPage] = useState("splash")
+  const [storage, setStorage] = useState(["F:/"])
 
 
   const app = {
@@ -44,7 +54,13 @@ function App() {
     navbar: navbar,
     setNavbar: setNavbar,
     connected: connected,
-    setConnected: setConnected
+    setConnected: setConnected,
+    server: server,
+    setServer: setServer,
+    page: page,
+    setPage: setPage,
+    storage: storage,
+    setStorage: setStorage
     
   }
 
@@ -57,6 +73,9 @@ function App() {
           <Route path="/" element={<Splash />} />
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/capture" element={<Capture />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/camera" element={<Camera />} />
+          <Route path="/storage" element={<Storage />} />
         </Routes>
       </Context.Provider>
     </BrowserRouter>

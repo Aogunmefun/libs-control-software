@@ -1,0 +1,39 @@
+.runButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.traySelection {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.selectTrays {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.trayOption {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--primaryColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.trayOption:hover {
+    cursor: pointer;
+    background-color: var(--gray);
+}
+
+.traySelected {
+    background-color: var(--primaryColor);
+}
