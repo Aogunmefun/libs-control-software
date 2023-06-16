@@ -123,7 +123,7 @@ function Connect(props) {
                                 <p>{device.device}</p>
                                 <div className="connectStatus">
                                     {
-                                        device.status?
+                                        device.state?
                                         <i className="material-icons">usb</i>:
                                         <i style={{color:"var(--gray)"}} className="material-icons">usb_off</i>
                                     }
@@ -144,7 +144,7 @@ function Connect(props) {
                                         </select>
                                     </div>:""
                                 }
-                                <button onClick={()=>window.server.connect(device.device)} className={"connect"+device.device}>{device.status?"Disconnect":"Connect"}</button>
+                                <button onClick={()=>window.server.connect(device.device)} className={"connect"+device.device}>{device.state?"Disconnect":"Connect"}</button>
                             </div>
                         )
                     })

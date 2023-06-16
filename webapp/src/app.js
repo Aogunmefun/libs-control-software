@@ -29,7 +29,7 @@ function App() {
   const [connected, setConnected] = useState([
     {device: "Spectrometer", state: false, connectType: "Channels", options:[]},
     {device: "PDG", state: false, connectType: "Port:", options: []},
-    {device: "Laser", state: false},
+    {device: "Laser", state: true},
     {device: "Robot", state :false, connectType: "IP:", options: []},
   ])
   const [server, setServer] = useState({
@@ -38,6 +38,9 @@ function App() {
   })
   const [page, setPage] = useState("splash")
   const [storage, setStorage] = useState(["F:/"])
+  const [explorer, setExplorer] = useState([])
+  const [file, setFile] = useState("F:/LIBS DB")
+
 
 
   const app = {
@@ -60,9 +63,50 @@ function App() {
     page: page,
     setPage: setPage,
     storage: storage,
-    setStorage: setStorage
+    setStorage: setStorage,
+    explorer: explorer,
+    setExplorer: setExplorer,
+    file: file,
+    setFile: setFile
     
   }
+
+  window.server.response((event, val) => {
+    console.log(val)
+    let temp = connected
+    if (val.function === "connectPDG") {
+      if (val.res) {
+        temp[1].state = true
+      }
+      else {
+        temp[1].state = false
+      }
+    }
+    else if (val.function === "connectSpectrometer") {
+      if (val.res) {
+        console.log("Yo")
+        temp[0].state = true
+      }
+      else {
+        temp[0].state = false
+      }
+    }
+    else if (val.function === "connectRobot") {
+      if (val.res) {
+        temp[3].state = true
+      }
+      else {
+        temp[3].state = false
+      }
+    }
+    setConnected([...temp])
+  })
+
+  useEffect(()=>{
+    
+    
+
+  }, [file])
 
   return (
     

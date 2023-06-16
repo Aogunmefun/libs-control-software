@@ -3,6 +3,7 @@ import "./capture.css"
 import { Context } from "../../app";
 import Tray from "../../components/tray/tray"
 import DataRun from "../../components/dataRun/dataRun";
+import Explorer from "../../components/explorer/explorer";
 
 function Capture() {
     
@@ -78,7 +79,8 @@ function Capture() {
     return(
         <div className="capture">
             <h1>Capture</h1>
-            {/* <DataRun trays={trays} /> */}
+            {/* <Explorer /> */}
+            <DataRun trays={trays} />
             
         </div>
     )

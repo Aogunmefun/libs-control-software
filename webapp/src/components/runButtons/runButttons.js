@@ -10,7 +10,7 @@ function RunButtons(props) {
         <div className="runButtons">
             {
                    
-                <button style={{pointerEvents:`${app.connected.some((item)=>!item.state)?"none":""}`}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>
+                <button onClick={()=>window.server.runAll()} style={{pointerEvents:`${app.connected.some((item)=>!item.state)?"none":""}`}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>
             }
             <div className="traySelection">
                 <button onClick={()=>{
