@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
 import './app.css';
 import HomePage from "./pages/home/homePage";
 import Splash from "./pages/splash/splash";
@@ -110,7 +110,7 @@ function App() {
 
   return (
     
-    <BrowserRouter>
+    <HashRouter>
       <Context.Provider value={app} >
         <Navbar expanded={navbar} setExpanded={setNavbar} />
         <Routes>
@@ -122,7 +122,7 @@ function App() {
           <Route path="/storage" element={<Storage />} />
         </Routes>
       </Context.Provider>
-    </BrowserRouter>
+    </HashRouter>
 
   );
 }

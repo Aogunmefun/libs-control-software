@@ -1,14 +1,13 @@
 const path = require('path');
 
 const { app, BrowserWindow, ipcMain } = require('electron');
-const isDev = require('electron-is-dev');
 const {PythonShell} = require('python-shell')
 const fs = require('fs')
 require('update-electron-app')()
 
 
-let pyshell = new PythonShell("C:/Users/deolu/OneDrive/Documents/Ligo/LIBS/libs-control-software/server/main.py")
-
+// let pyshell = new PythonShell("C:/Users/deolu/OneDrive/Documents/Ligo/LIBS/libs-control-software/server/main.py")
+let pyshell = new PythonShell("../../server/main.py")
 
 var win
 
@@ -21,7 +20,7 @@ function createWindow() {
         preload: path.join(__dirname, 'preload.js'),
         contextIsolation: true,
       },
-      icon:"favicon-L.ico"
+      icon: path.join(__dirname, "icon.png")
     });
   
     // and load the index.html of the app.
@@ -31,8 +30,8 @@ function createWindow() {
     //     ? 'http://localhost:3000'
     //     : `file://${path.join(__dirname, '../build/index.html')}`
     // );
-    win.loadURL('http://localhost:3000');
-    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+    // win.loadURL('http://localhost:3000');
+    win.loadURL(path.join(__dirname, "index.html"))
     // Open the DevTools.
     // if (isDev) {
     //   win.webContents.openDevTools({ mode: 'detach' });
