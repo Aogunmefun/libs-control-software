@@ -30,8 +30,8 @@ function createWindow() {
     //     ? 'http://localhost:3000'
     //     : `file://${path.join(__dirname, '../build/index.html')}`
     // );
-    // win.loadURL('http://localhost:3000');
-    win.loadURL(path.join(__dirname, "index.html"))
+    win.loadURL('http://localhost:3000');
+    // win.loadURL(path.join(__dirname, "index.html"))
     // Open the DevTools.
     // if (isDev) {
     //   win.webContents.openDevTools({ mode: 'detach' });

@@ -183,7 +183,7 @@ def beginRoutine():
     startSpectrometer("my measurement")
     globals.measconfig1.m_IntegrationTime = float(7000/1000)
     globals.measconfig2.m_IntegrationTime = float(500/1000)
-    globals.maxFrames = int("50")
+    globals.maxFrames = int("10000")
     ret = AVS_PrepareMeasure(globals.channel1, globals.measconfig1)
     ret = AVS_PrepareMeasure(globals.channel2, globals.measconfig2)
     # print("Spectrometer Ready")
@@ -216,7 +216,7 @@ def startRoutine(tray, sample, name):
             time.sleep(0.001)
         if dataready == True:
             globals.scans = globals.scans + 1
-            # print("frame: " + str(globals.scans))
+            print("frame: " + str(globals.scans))
             newData1()
             # newData2()
         while (dataready2 == False):
@@ -318,19 +318,20 @@ def connect():
 @app.route('/trayMap', methods=['POST'])
 def trayMapUpload():
     try:
-        globals.tower1 = np.array(request.get_json()['map'])
-        print(globals.tower1)
+        globals.names = np.array(request.get_json()['map'])
+        print(globals.names)
         return {"res": True}
     except:
         return {"res": False}
 
 @app.route('/getMap', methods=["GET"])
 def getMap():
-    return {"res": json.dumps(globals.tower1.tolist())}
+    return {"res": json.dumps(globals.names)}
 
 @app.route('/runAll', methods=["GET"])
 def runAllSamples():
     try:
+        
         runAll()
         return {"res": True}
     except Exception as e:

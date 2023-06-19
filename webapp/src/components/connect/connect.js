@@ -24,6 +24,17 @@ function Connect(props) {
             }
         }).then((res)=>{
             console.log(res.data)
+            let temp = app.connected
+            temp = temp.map((dev)=>{
+                if (dev.function === device) {
+                    return {...dev, state:res.data.res}
+                }
+                else{
+                    return dev
+                }
+            })
+            app.setConnected(temp)
+            
         }).catch((e)=>console.log(e))
     }
 
