@@ -10,15 +10,21 @@ from array import *
 from robotCommands import *
 from datetime import date
 import os
+from flask import Flask
+from flask import request
 
 ##### Connecting to Devices #####
 def connectPDG(input): # Connecting to PDG
+    print("connecting to PDG")
     val = input[0]
     if val:
-        globals.pdg.open()
-        if (globals.pdg.is_open):
-            return True
-        else:
+        try:
+            globals.pdg.open()
+            if (globals.pdg.is_open):
+                return True
+            else:
+                return False
+        except:
             return False
     else:
         globals.pdg.close()
@@ -29,7 +35,7 @@ def connectPDG(input): # Connecting to PDG
 
 def connectSpectrometer(input): # Connect to spectrometer
     val = input[0]
-    
+    print("Connecting to Spectrometer")
     if (val):
         if (AVS_Init(0) < 2):
             
@@ -65,6 +71,7 @@ def connectSpectrometer(input): # Connect to spectrometer
         # Need a way to deativate
 
 def connectRobot(val): # Connect Robot
+    print("Connecting to Robot")
     if val:
         globals.robot.connect((globals.robotHost, globals.robotPort))
         return True
@@ -236,17 +243,16 @@ def startRoutine(tray, sample, name):
             # print(globals.wavelengths.shape)
             stopScanMovement()
 
-def runAll(args):
-
-
+def runAll():
     try:
+        print("Yo")
         contents = os.listdir(globals.folder)
         globals.run ="run"+str(int(contents[len(contents)-1][3:]) + 1)
     except Exception as e:
         # print(e)
         globals.run="run1"
     
-    for row in range(1):
+    for row in range(globals.tower1.shape[0]):
         # print(1)
         
         beginRoutine()
@@ -254,7 +260,7 @@ def runAll(args):
         setPosition(globals.tower1[row,:])
         grabSample()
         tower1(True)
-        for comp in range(1):
+        for comp in range(globals.tower1.shape[1]):
             startRoutine(row+1, comp+1, globals.names[row][comp])
             
         readyScanPosition()
@@ -286,13 +292,62 @@ libs = {
 }
 
 
-while (1):
-    data = sys.stdin.readline()
-    data = json.loads(data)
-    # print("data", data)
-    # print(libs[data["function"]](data["arguments"]))
-    # contents = os.listdir(globals.folder)
-    # print("run", contents[len(contents)-1][3:])
-    res = libs[data["function"]](data["arguments"])
-    print(json.dumps({"function": data["function"], "res": res}))
-    sys.stdout.flush()
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'LIBS server'
+
+
+@app.route('/connect', methods=['POST'])
+def connect():
+    # print(request.get_json())
+    # if request.get_json()['device'] == "PDG":
+    #     print("Connect PDG")
+    #     connectPDG
+    # elif request.get_json()['device'] == "Spectrometer":
+    #     print("Connect Spectrometer")
+    # elif request.get_json()['device'] == "Robot":
+    #     print("Connect Robot")
+    try:
+        res = libs[request.get_json()["function"]](request.get_json()["arguments"])
+        return {"res": res}
+    except:
+        return {"res": False} 
+
+@app.route('/trayMap', methods=['POST'])
+def trayMapUpload():
+    try:
+        globals.tower1 = np.array(request.get_json()['map'])
+        print(globals.tower1)
+        return {"res": True}
+    except:
+        return {"res": False}
+
+@app.route('/getMap', methods=["GET"])
+def getMap():
+    return {"res": json.dumps(globals.tower1.tolist())}
+
+@app.route('/runAll', methods=["GET"])
+def runAllSamples():
+    try:
+        runAll()
+        return {"res": True}
+    except Exception as e:
+        print(e)
+        return {"res": False}
+
+@app.route('/getDir', methods=["GET"])
+def getDir():
+    try:
+        dir = []
+        dates = os.listdir("F:/LIBS DB")
+        for date in dates:
+            runs = os.listdir("F:/LIBS DB/"+date+"/runs")
+            dir.append({"date": date, "runs": runs})
+        return {"res": dir}
+    except:
+        return {"res": False}
+
+if __name__ == '__main__':
+    app.run()

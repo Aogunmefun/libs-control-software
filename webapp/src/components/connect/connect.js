@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import "./connect.css"
 import { Context } from "../../app";
 import Modal from "../modal/modal"
+import axios from "axios";
 
 
 function Connect(props) {
@@ -12,103 +13,18 @@ function Connect(props) {
 
     const app = useContext(Context)
 
-
-    const connectSpectrometer = (val)=>{
-        setBusy(true)
-        app.eel.connectSpectrometer(val)((res)=>{
-            setBusy(false)
-            if(val) {
-                if (res) {
-                    app.setConnected({
-                        ...app.connected,
-                        spectrometer:val
-                        })
-                }
-                else {
-                    setModal({
-                        state:true,
-                        text:"Make sure that Both Channels of Spectrometer are connected"
-                    })
-                }
+    const connect = (device, connect)=>{
+        axios({
+            url:"/connect",
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            data: {
+                function: device,
+                arguments:[connect]
             }
-            else {
-
-            }
-            
-        })
-    }
-
-    const connectPDG = (val)=>{
-        setBusy(true)
-        app.eel.connectPDG(val)((res)=>{
-            setBusy(false)
-            if(val){
-                if (res) {
-                    app.setConnected({
-                        ...app.connected,
-                        pdg:true
-                    })
-                }
-                else {
-                    setModal({state:true, text:"Failed to Connect to PDG. Make sure USB is connected"})
-                }
-            }
-            else {
-                if(res) {
-                    app.setConnected({
-                        ...app.connected,
-                        pdg:false
-                    })
-                }
-                else {
-                    setModal({state:true, text:"Failed to Close PDG connection"})
-                }
-            }
-            
-        })
-    }
-
-    const connectLaser = (val) =>{
-        setBusy(false)
-        app.eel.connectLaser()(()=>{
-            app.setConnected({
-                ...app.connected,
-                laser:  !app.connected.laser
-            })
-        })
-    }
-
-    const connectRobot = (val)=>{
-        setBusy(true)
-        
-        app.eel.connectRobot(val)((res)=>{
-            setBusy(false)
-            if(val) {
-                if(res) {
-                    app.setConnected({
-                        ...app.connected,
-                        robot: true
-                    })
-                }
-                else {
-                    setModal({state:true, text:"Failed to Connect to robot"})
-                }
-            }
-            else {
-                if (res) {
-                    app.setConnected({
-                        ...app.connected,
-                        robot:false
-                    })
-                }
-                else {
-                    setModal({state:true, text:"Failed to disconnect from robot"})
-                }
-            }
-            
-        })
-        
-
+        }).then((res)=>{
+            console.log(res.data)
+        }).catch((e)=>console.log(e))
     }
 
     return(
@@ -144,7 +60,7 @@ function Connect(props) {
                                         </select>
                                     </div>:""
                                 }
-                                <button onClick={()=>window.server.connect(device.device)} className={"connect"+device.device}>{device.state?"Disconnect":"Connect"}</button>
+                                <button onClick={()=>connect(device.function, device.state?false:true)} className={"connect"+device.device}>{device.state?"Disconnect":"Connect"}</button>
                             </div>
                         )
                     })

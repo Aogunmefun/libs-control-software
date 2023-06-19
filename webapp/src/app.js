@@ -27,10 +27,10 @@ function App() {
   ])
   const [navbar, setNavbar] = useState(true)
   const [connected, setConnected] = useState([
-    {device: "Spectrometer", state: false, connectType: "Channels", options:[]},
-    {device: "PDG", state: false, connectType: "Port:", options: []},
+    {device: "Spectrometer", state: false, connectType: "Channels", options:[], function: "connectSpectrometer"},
+    {device: "PDG", state: false, connectType: "Port:", options: [], function: "connectPDG"},
     {device: "Laser", state: true},
-    {device: "Robot", state :false, connectType: "IP:", options: []},
+    {device: "Robot", state :false, connectType: "IP:", options: [], function: "connectRobot"},
   ])
   const [server, setServer] = useState({
     connected: false,
@@ -40,6 +40,7 @@ function App() {
   const [storage, setStorage] = useState(["F:/"])
   const [explorer, setExplorer] = useState([])
   const [file, setFile] = useState("F:/LIBS DB")
+  const [trays, setTrays] = useState([])
 
 
 
@@ -67,40 +68,42 @@ function App() {
     explorer: explorer,
     setExplorer: setExplorer,
     file: file,
-    setFile: setFile
+    setFile: setFile,
+    trays: trays,
+    setTrays: setTrays
     
   }
 
-  window.server.response((event, val) => {
-    console.log(val)
-    let temp = connected
-    if (val.function === "connectPDG") {
-      if (val.res) {
-        temp[1].state = true
-      }
-      else {
-        temp[1].state = false
-      }
-    }
-    else if (val.function === "connectSpectrometer") {
-      if (val.res) {
-        console.log("Yo")
-        temp[0].state = true
-      }
-      else {
-        temp[0].state = false
-      }
-    }
-    else if (val.function === "connectRobot") {
-      if (val.res) {
-        temp[3].state = true
-      }
-      else {
-        temp[3].state = false
-      }
-    }
-    setConnected([...temp])
-  })
+  // window.server.response((event, val) => {
+  //   console.log(val)
+  //   let temp = connected
+  //   if (val.function === "connectPDG") {
+  //     if (val.res) {
+  //       temp[1].state = true
+  //     }
+  //     else {
+  //       temp[1].state = false
+  //     }
+  //   }
+  //   else if (val.function === "connectSpectrometer") {
+  //     if (val.res) {
+  //       console.log("Yo")
+  //       temp[0].state = true
+  //     }
+  //     else {
+  //       temp[0].state = false
+  //     }
+  //   }
+  //   else if (val.function === "connectRobot") {
+  //     if (val.res) {
+  //       temp[3].state = true
+  //     }
+  //     else {
+  //       temp[3].state = false
+  //     }
+  //   }
+  //   setConnected([...temp])
+  // })
 
   useEffect(()=>{
     

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./explorer.css"
 import { Context } from "../../app";
 import Folder from "../folder/folder";
+import axios from "axios"
 
 
 function Explorer(props) {
@@ -15,9 +16,21 @@ function Explorer(props) {
     },[path])
 
     const getDir = async ()=>{
-        let res = await window.server.getFiles(path)
-        setDir(res)
-        console.log(res)
+        // let res = await window.server.getFiles(path)
+        // setDir(res)
+        // console.log(res)
+        axios({
+            url: "/getDir",
+            method: "GET"
+        }).then((res)=>{
+            console.log(res.data.res)
+            if (res.data.res) {
+                setDir(res.data.res)
+            }
+            else {
+                alert("Can't querry DB structure")
+            }
+        }).catch((e)=>alert("Error querrying DB structure"))
     }
 
     return(
@@ -37,7 +50,7 @@ function Explorer(props) {
                                         <div className="explorerFolder explorerRun">
                                             <div className="explorerFolderTitle">
                                                 <i className="material-icons">123</i>
-                                                <p>{run.name}</p>
+                                                <p>{run}</p>
                                             </div>
                                         </div>
                                     )

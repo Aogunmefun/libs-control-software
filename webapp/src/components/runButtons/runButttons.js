@@ -1,16 +1,33 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./runButtons.css"
 import { Context } from "../../app";
+import axios from "axios"
 
 function RunButtons(props) {
     
     const app = useContext(Context)
 
+    const runAll = ()=>{
+        axios({
+            url:"/runAll",
+            method:"GET"
+        }).then((res)=>{
+            if (res.data.res) {
+                alert("Finished running")
+            }
+            else {
+                alert("Error encountered while running")
+            }
+        }).catch((e)=>{
+            alert("Error encountered while running")    
+        })
+    }
+
     return(
         <div className="runButtons">
             {
                    
-                <button onClick={()=>window.server.runAll()} style={{pointerEvents:`${app.connected.some((item)=>!item.state)?"none":""}`}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>
+                <button onClick={()=>runAll()} style={{}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>
             }
             <div className="traySelection">
                 <button onClick={()=>{

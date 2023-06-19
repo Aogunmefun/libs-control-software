@@ -8,4 +8,6 @@
 }
 
 
-
+.capture > button {
+    color: var(--primaryColor);
+}
