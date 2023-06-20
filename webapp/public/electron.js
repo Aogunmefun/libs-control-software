@@ -3,11 +3,12 @@ const path = require('path');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const {PythonShell} = require('python-shell')
 const fs = require('fs')
-require('update-electron-app')()
+const axios = require('axios')
+// require('update-electron-app')()
 
 
 // let pyshell = new PythonShell("C:/Users/deolu/OneDrive/Documents/Ligo/LIBS/libs-control-software/server/main.py")
-let pyshell = new PythonShell("../../server/main.py")
+// let pyshell = new PythonShell("../../server/main.py")
 
 var win
 
@@ -44,59 +45,13 @@ function createWindow() {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.whenReady().then(()=>{
-    ipcMain.handle('connectPDG', ()=> {
-      pyshell.send(JSON.stringify({function: 'connectPDG', arguments: [true]}))
-    })
-    ipcMain.handle('connectSpectrometer', ()=> {
-      console.log("sending")
-      pyshell.send(JSON.stringify({function: 'connectSpectrometer', arguments: [true]}))
-    })
-    ipcMain.handle('connectRobot', ()=> {
-      pyshell.send(JSON.stringify({function: 'connectRobot', arguments: [true]}))
-    })
-    ipcMain.handle('runAll', ()=>{
-      console.log("runAll")
-      pyshell.send(JSON.stringify({function: 'runAll', arguments: []}))
-    })
-    ipcMain.handle('getFiles', (channel, folder)=>{
-      console.log(folder)
-      let files = []
-      const getDirectories = source =>
-        fs.readdirSync(source, { withFileTypes: true })
-          .filter(dirent => dirent.isDirectory())
-          .map(dirent => dirent.name)
-      const getFiles = source =>
-        fs.readdirSync(source)
-      let dates = getDirectories(folder)
-      // dates.forEach((date)=>files.push({
-      //   date: date, 
-      //   sessions: getDirectories("F:/LIBS DB/"+date+"/Sessions").map((session)=>{
-      //     return {
-      //       name:session,
-      //       runs: getFiles("F:/LIBS DB/"+date+"/Sessions/"+session).map((run)=>{
-      //         return {name: run}
-      //       })
-      //     }
-      //   })
-      // }))
-      dates.forEach((date)=>files.push({
-        date: date, 
-        runs: getFiles("F:/LIBS DB/"+date+"/runs").map((run)=>{
-          return {name: run}
-        })
-          
-        
-      }))
-      // res = res.map((date)=>getDirectories("F:/LIBS DB/"+date+"/Sessions"))
-      console.log(files)
-      return files
+
+    ipcMain.handle('request', async (_, axios_request) => {
+      const result = await axios(axios_request)
+      return { data: result.data, status: result.status }
     })
     createWindow()
-    pyshell.on('message', function(msg) {
-      console.log(msg)
-      win.webContents.send('response', JSON.parse(msg))
-      
-    })
+
   });
   
   // Quit when all windows are closed, except on macOS. There, it's common

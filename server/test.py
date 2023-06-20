@@ -1,14 +1,14 @@
-import os
+# import os
 
 
-dir = [
+# dir = [
 
-]
-dates = os.listdir("F:/LIBS DB")
+# ]
+# dates = os.listdir("F:/LIBS DB")
 
-for date in dates:
-    runs = os.listdir("F:/LIBS DB/"+date+"/runs")
-    dir.append({"date": date, "runs": runs})
+# for date in dates:
+#     runs = os.listdir("F:/LIBS DB/"+date+"/runs")
+#     dir.append({"date": date, "runs": runs})
 
 
-print(dir)
+# print(dir)

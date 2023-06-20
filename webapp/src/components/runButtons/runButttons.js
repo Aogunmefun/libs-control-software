@@ -9,7 +9,7 @@ function RunButtons(props) {
 
     const runAll = ()=>{
         axios({
-            url:"/runAll",
+            url:"http://localhost:5000/runAll",
             method:"GET"
         }).then((res)=>{
             if (res.data.res) {

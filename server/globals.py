@@ -5,7 +5,7 @@ import serial
 from datetime import date
 
 today = str(date.today()).split("-")[1]+"-"+str(date.today()).split("-")[2]+"-"+str(date.today()).split("-")[0]
-folder = "F:/LIBS DB/"+today+"/runs/"
+folder = "D:/LIBS DB/"+today+"/runs/"
 run = str(1)
 channel1 = 0
 channel2 = 0
@@ -45,7 +45,7 @@ robot = socket.socket()
 robotHost = "192.168.1.6"
 robotPort = 3000
 pdg = serial.Serial()
-pdg.port = "COM9"
+pdg.port = "COM3"
 pdg.baudrate = 115200
 pdg.timeout = 0
 pdg.parity = serial.PARITY_EVEN

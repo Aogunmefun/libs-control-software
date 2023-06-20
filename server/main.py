@@ -12,6 +12,12 @@ from datetime import date
 import os
 from flask import Flask
 from flask import request
+from flask_cors import CORS, cross_origin
+import serial.tools.list_ports
+from twilio.rest import Client
+from dotenv import dotenv_values
+
+env = dotenv_values(".env")
 
 ##### Connecting to Devices #####
 def connectPDG(input): # Connecting to PDG
@@ -21,6 +27,7 @@ def connectPDG(input): # Connecting to PDG
         try:
             globals.pdg.open()
             if (globals.pdg.is_open):
+                globals.pdg.write(b':PULSE0:STATE OFF\r\n')
                 return True
             else:
                 return False
@@ -291,15 +298,26 @@ libs = {
 
 }
 
-
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+sid = env.get('TWILIO_ACCOUNT_SID')
+auth = env.get('TWILIO_AUTH_TOKEN')
+client = Client(sid, auth)
+
+
+
+
 
 @app.route('/')
+@cross_origin()
 def index():
     return 'LIBS server'
 
 
 @app.route('/connect', methods=['POST'])
+@cross_origin()
 def connect():
     # print(request.get_json())
     # if request.get_json()['device'] == "PDG":
@@ -316,6 +334,7 @@ def connect():
         return {"res": False} 
 
 @app.route('/trayMap', methods=['POST'])
+@cross_origin()
 def trayMapUpload():
     try:
         globals.names = np.array(request.get_json()['map'])
@@ -325,28 +344,49 @@ def trayMapUpload():
         return {"res": False}
 
 @app.route('/getMap', methods=["GET"])
+@cross_origin()
 def getMap():
     return {"res": json.dumps(globals.names)}
 
 @app.route('/runAll', methods=["GET"])
+@cross_origin()
 def runAllSamples():
     try:
         
         runAll()
+        message = client.messages.create(
+            body='Sample scan finished',
+            from_='+18886126478',
+            to='+14807977009'
+        )
         return {"res": True}
     except Exception as e:
         print(e)
         return {"res": False}
 
 @app.route('/getDir', methods=["GET"])
+@cross_origin()
 def getDir():
     try:
         dir = []
-        dates = os.listdir("F:/LIBS DB")
+        dates = os.listdir("D:/LIBS DB")
         for date in dates:
-            runs = os.listdir("F:/LIBS DB/"+date+"/runs")
+            runs = os.listdir("D:/LIBS DB/"+date+"/runs")
             dir.append({"date": date, "runs": runs})
+            print("response", dir)
         return {"res": dir}
+    except:
+        return {"res": False}
+    
+@app.route('/getPorts', methods=["GET"])
+@cross_origin()
+def getPorts():
+    res = []
+    try:
+        ports = serial.tools.list_ports.comports()
+        for port, desc, hwid in sorted(ports):
+            res.append(port)
+        return {"res": res}
     except:
         return {"res": False}
 

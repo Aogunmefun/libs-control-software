@@ -20,8 +20,8 @@ function Explorer(props) {
         // setDir(res)
         // console.log(res)
         axios({
-            url: "/getDir",
-            method: "GET"
+            url: "http://localhost:5000/getDir",
+            method: "GET",
         }).then((res)=>{
             console.log(res.data.res)
             if (res.data.res) {

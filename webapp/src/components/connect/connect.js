@@ -15,7 +15,7 @@ function Connect(props) {
 
     const connect = (device, connect)=>{
         axios({
-            url:"/connect",
+            url:"http://localhost:5000/connect",
             method: "POST",
             headers: {"Content-Type":"application/json"},
             data: {
@@ -38,6 +38,10 @@ function Connect(props) {
         }).catch((e)=>console.log(e))
     }
 
+    const getPorts = ()=>{
+
+    }
+
     return(
         <div className="connect">
             <Modal close={true} modal={modal} setModal={setModal} />
@@ -58,20 +62,29 @@ function Connect(props) {
                                 {
                                     app.page === "devices"?
                                     <div className="connectField">
-                                        <p>{device.connectType}</p>
-                                        <select >
-                                            <option value=""></option>
-                                            {
-                                                device.options?.map((option,index)=>{
-                                                    return(
-                                                        <option key={"ConnectionOption"+device.connectType+option} value={option}>{option}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                        
+                                        {
+                                            device.device==="PDG"
+                                            ?<>
+                                            <p>{device.connectType}</p>
+                                            <select >
+                                                <option value=""></option>
+                                                {
+                                                    device.options?.map((option,index)=>{
+                                                        return(
+                                                            <option key={"ConnectionOption"+device.connectType+option} value={option}>{option}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select>
+                                            <button onClick={()=>getPorts()} className="btn--flat"><i className="material-icons">refresh</i></button>
+                                            </>
+                                            :""
+                                        }
                                     </div>:""
                                 }
-                                <button onClick={()=>connect(device.function, device.state?false:true)} className={"connect"+device.device}>{device.state?"Disconnect":"Connect"}</button>
+                                {/* <button onClick={()=>connect(device.function, device.state?false:true)} className={`connect${device.device} ${device.channel||device.device==="Spectrometer"||device.device==="Robot"?"":"disabled"}`}>{device.state?"Disconnect":"Connect"}</button> */}
+                                <button onClick={()=>connect(device.function, device.state?false:true)} className={`connect${device.device}`}>{device.state?"Disconnect":"Connect"}</button>
                             </div>
                         )
                     })
