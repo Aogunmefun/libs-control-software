@@ -1,15 +1,27 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import "./tray.css"
+import { Context } from "../../app"
 
 function Tray(props) {
 
+    const app = useContext(Context)
     const [holders, setHolders] = useState(["","","","",""])
     const [index, setIndex] = useState(0)
     const [barcode, setBarcode] = useState("")
+    // const [selected, setSelected] = useState()
+
+
+    const changeSelected = ()=>{
+        let temp = app.selected
+        temp[props.index] = {index:props.index, selected:!temp[props.index].selected}
+        app.setSelected([...temp])
+    }
 
     useEffect(()=>{
-
-    }, [index])
+        if (props.index===0) {
+            console.log(document.querySelector(".select"))
+        }
+    })
     
     
 
@@ -33,7 +45,8 @@ function Tray(props) {
             }
             </div>
             
-            <button>{"Run Tray "+(props.index+1)}</button>
+            <input className="select" type="checkbox" checked={app.selected[props.index].selected} onChange={changeSelected} />
+            {/* <button>{"Run Tray "+(props.index+1)}</button> */}
             
         </div>
     )

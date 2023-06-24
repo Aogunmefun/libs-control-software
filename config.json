@@ -1,0 +1,8 @@
+{
+    "drive":"D:/",
+    "serverIp":"localhost",
+    "serverPort":"5000",
+    "loaderPort":"3000",
+    "frames":"50",
+    "pdgPort":"COM3"
+}

@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    gap: 50px;
 }
 
 .trayHolder {
@@ -30,13 +31,6 @@
 .holder:hover {
     cursor: pointer;
     background-color: var(--gray);
-}
-.modal {
-    transform: translate(35vw,30vh);
-    width: 300px;
-    height: 200px;
-    padding-top: 20px;
-    border-radius: 1rem;
 }
 
 .modal > .modal-content {

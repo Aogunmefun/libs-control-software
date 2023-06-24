@@ -3,9 +3,15 @@ import socket
 import pandas as pd
 import serial
 from datetime import date
+import json
 
 today = str(date.today()).split("-")[1]+"-"+str(date.today()).split("-")[2]+"-"+str(date.today()).split("-")[0]
-folder = "D:/LIBS DB/"+today+"/runs/"
+f = open('config.json')
+config = json.load(f)
+ip = config['serverIp']
+port = config['serverPort']
+drive = config['drive']
+folder = drive+"LIBS DB/"+today+"/runs/"
 run = str(1)
 channel1 = 0
 channel2 = 0
@@ -16,7 +22,7 @@ wavelength2 = [0.0] * 4096
 spectraldata1 = [0.0] * 4096
 spectraldata2 = [0.0] * 4096
 scan = False
-maxFrames = 50
+maxFrames = config['frames']
 scans = 0
 uvExposure = 10000
 visibleExposure = 2500
@@ -45,7 +51,7 @@ robot = socket.socket()
 robotHost = "192.168.1.6"
 robotPort = 3000
 pdg = serial.Serial()
-pdg.port = "COM3"
+pdg.port = config['pdgPort']
 pdg.baudrate = 115200
 pdg.timeout = 0
 pdg.parity = serial.PARITY_EVEN

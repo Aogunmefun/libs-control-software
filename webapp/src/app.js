@@ -9,6 +9,9 @@ import Devices from "./pages/devices/devices";
 import Camera from "./pages/camera/camera";
 import Storage from "./pages/storage/storage";
 import Navbar from "./components/sidnav/sidenav"
+import Analyze from "./pages/analyze/analyze";
+import Config from "./pages/config/config";
+import configFile from "./config.json"
 
 
 export const Context = React.createContext()
@@ -41,8 +44,22 @@ function App() {
   const [explorer, setExplorer] = useState([])
   const [file, setFile] = useState("F:/LIBS DB")
   const [trays, setTrays] = useState([])
+  const [selected, setSelected] = useState([])
+  const [config, setConfig] = useState(configFile)
 
+  useEffect(()=>{
+    let temp = selected
+    for (let i = 0; i < 10; i++) {
+      temp.push({
+        index:i,
+        selected:true
+      })
+    }
+  },[])
 
+  useEffect(()=>{
+    console.log(config)
+  }, [config])
 
   const app = {
 
@@ -70,7 +87,11 @@ function App() {
     file: file,
     setFile: setFile,
     trays: trays,
-    setTrays: setTrays
+    setTrays: setTrays,
+    config:config,
+    setConfig:setConfig,
+    selected:selected,
+    setSelected:setSelected
     
   }
 
@@ -123,6 +144,8 @@ function App() {
           <Route path="/devices" element={<Devices />} />
           <Route path="/camera" element={<Camera />} />
           <Route path="/storage" element={<Storage />} />
+          <Route path="/analyze" element={<Analyze />} />
+          <Route path="/config" element={<Config />} />
         </Routes>
       </Context.Provider>
     </HashRouter>

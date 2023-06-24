@@ -15,7 +15,7 @@ function Connect(props) {
 
     const connect = (device, connect)=>{
         axios({
-            url:"http://localhost:5000/connect",
+            url:"http://"+app.config.serverIp+":"+app.config.serverPort+"/connect",
             method: "POST",
             headers: {"Content-Type":"application/json"},
             data: {

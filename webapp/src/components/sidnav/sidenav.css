@@ -50,6 +50,7 @@
     /* border-right: 2px solid var(--graylight); */
     gap: 10px;
     overflow-x: hidden;
+    z-index: 1;
     
     
 }

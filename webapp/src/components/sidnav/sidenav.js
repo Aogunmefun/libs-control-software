@@ -34,11 +34,11 @@ function Sidenav(props) {
                     <i className="material-icons-outlined">camera</i>
                     <p>Capture</p>
                 </button>
-                <button onClick={()=>navigate("/storage")} className="btn--sidenav">
-                    <i className="material-icons-outlined">folder</i>
-                    <p>Storage</p>
+                <button onClick={()=>navigate("/config")} className="btn--sidenav">
+                    <i className="material-icons-outlined">settings</i>
+                    <p>Config</p>
                 </button>
-                <button onClick={()=>navigate("/storage")} className="btn--sidenav">
+                <button onClick={()=>navigate("/analyze")} className="btn--sidenav">
                     <i className="material-icons-outlined">assessment</i>
                     <p>Analyze</p>
                 </button>

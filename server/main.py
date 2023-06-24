@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import h5py as h5
 from array import *
 from robotCommands import *
+from analyze import *
 from datetime import date
 import os
 from flask import Flask
@@ -16,6 +17,8 @@ from flask_cors import CORS, cross_origin
 import serial.tools.list_ports
 from twilio.rest import Client
 from dotenv import dotenv_values
+import csv
+from timeit import default_timer as timer
 
 env = dotenv_values(".env")
 
@@ -134,7 +137,7 @@ def newData2():
                 f["intensity"][f["intensity"].shape[0]-1:] = y
     except Exception as e:
         print(e)
-
+   
 def startSpectrometer(name):
     
     globals.measconfig1 = MeasConfigType()
@@ -190,7 +193,7 @@ def beginRoutine():
     startSpectrometer("my measurement")
     globals.measconfig1.m_IntegrationTime = float(7000/1000)
     globals.measconfig2.m_IntegrationTime = float(500/1000)
-    globals.maxFrames = int("10000")
+    # globals.maxFrames = int("10000")
     ret = AVS_PrepareMeasure(globals.channel1, globals.measconfig1)
     ret = AVS_PrepareMeasure(globals.channel2, globals.measconfig2)
     # print("Spectrometer Ready")
@@ -199,7 +202,7 @@ def startRoutine(tray, sample, name):
     globals.scan = True
     robotStopped = False
     globals.fileName = str(name)
-    
+    # globals.fileName = name
     readyScanPosition()
     startScanMovement(sample,1)
     # print("yo")
@@ -218,12 +221,13 @@ def startRoutine(tray, sample, name):
         ret = AVS_Measure(globals.channel1, 0, 1)
         dataready = False
         dataready2 = False
+        start = timer()
         while (dataready == False):
             dataready = (AVS_PollScan(globals.channel1) == True)
             time.sleep(0.001)
         if dataready == True:
-            globals.scans = globals.scans + 1
-            print("frame: " + str(globals.scans))
+            
+            
             newData1()
             # newData2()
         while (dataready2 == False):
@@ -231,7 +235,13 @@ def startRoutine(tray, sample, name):
             dataready2 = (AVS_PollScan(globals.channel2) == True)
             time.sleep(0.001)
         if dataready2 == True:
+            end = timer()
+            analyzerTime = end-start
+            start = timer()
             newData2()
+            end = timer()
+            globals.scans = globals.scans + 1
+            print("frame: " + str(globals.scans), "Time to write:", end-start, "Time to Analyze", analyzerTime)
         # dataready2 = (AVS_PollScan(globals.channel2) == True)
         # time.sleep(0.001)
         # if (dataready2):
@@ -267,7 +277,7 @@ def runAll():
         setPosition(globals.tower1[row,:])
         grabSample()
         tower1(True)
-        for comp in range(globals.tower1.shape[1]):
+        for comp in range(5):
             startRoutine(row+1, comp+1, globals.names[row][comp])
             
         readyScanPosition()
@@ -276,6 +286,7 @@ def runAll():
 
 def runSelected(indexes):
     # print(len(indexes))
+    print("index", indexes)
     for ind in indexes:
         beginRoutine()
         tower1()
@@ -305,10 +316,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 sid = env.get('TWILIO_ACCOUNT_SID')
 auth = env.get('TWILIO_AUTH_TOKEN')
 client = Client(sid, auth)
+# globals.names = []
 
-
-
-
+print("Server IP Address:", globals.ip)
+print("Server Port:", globals.port)
+print("Drive Selected:", globals.drive)
 
 @app.route('/')
 @cross_origin()
@@ -337,7 +349,7 @@ def connect():
 @cross_origin()
 def trayMapUpload():
     try:
-        globals.names = np.array(request.get_json()['map'])
+        globals.names = request.get_json()['map']
         print(globals.names)
         return {"res": True}
     except:
@@ -346,6 +358,12 @@ def trayMapUpload():
 @app.route('/getMap', methods=["GET"])
 @cross_origin()
 def getMap():
+    # with open("samples.csv", "r") as mycsv:
+    #     reader = csv.reader(mycsv, delimiter=",")
+    #     for line in reader:
+    #         line = [int(i.replace(" ","")) for i in line]
+    #         globals.names.append(line)
+    # print(globals.names)
     return {"res": json.dumps(globals.names)}
 
 @app.route('/runAll', methods=["GET"])
@@ -354,7 +372,23 @@ def runAllSamples():
     try:
         
         runAll()
-        message = client.messages.create(
+        client.messages.create(
+            body='Sample scan finished',
+            from_='+18886126478',
+            to='+14807977009'
+        )
+        return {"res": True}
+    except Exception as e:
+        print(e)
+        return {"res": False}
+
+@app.route('/runSelected', methods=["POST"])
+@cross_origin()
+def runSelectedSamples():
+    try:
+        
+        runSelected(request.get_json()['indexes'])
+        client.messages.create(
             body='Sample scan finished',
             from_='+18886126478',
             to='+14807977009'
@@ -369,9 +403,9 @@ def runAllSamples():
 def getDir():
     try:
         dir = []
-        dates = os.listdir("D:/LIBS DB")
+        dates = os.listdir(globals.drive+"LIBS DB")
         for date in dates:
-            runs = os.listdir("D:/LIBS DB/"+date+"/runs")
+            runs = os.listdir(globals.drive+"LIBS DB/"+date+"/runs")
             dir.append({"date": date, "runs": runs})
             print("response", dir)
         return {"res": dir}
@@ -390,5 +424,16 @@ def getPorts():
     except:
         return {"res": False}
 
+@app.route('/analyze', methods=["POST"])
+@cross_origin()
+def analyzeSample():
+    try:
+        res = analyze(globals.drive+"LIBS DB/"+request.get_json()['folder'])
+        return {"res": res}
+    except Exception as e:
+        print(e)
+        return {"res": False}
+        
+
 if __name__ == '__main__':
-    app.run()
+    app.run(host=globals.ip, port=globals.port)

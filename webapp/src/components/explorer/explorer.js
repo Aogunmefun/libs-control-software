@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./explorer.css"
 import { Context } from "../../app";
 import Folder from "../folder/folder";
+import Modal from "../../components/modal/modal";
 import axios from "axios"
 
 
@@ -10,6 +11,7 @@ function Explorer(props) {
     const app = useContext(Context)
     const [path, setPath] = useState("F:/LIBS DB")
     const [dir, setDir] = useState([])
+    const [modal, setModal] = useState({text: "Loading...", state: false})
 
     useEffect(()=>{
         getDir()
@@ -20,7 +22,7 @@ function Explorer(props) {
         // setDir(res)
         // console.log(res)
         axios({
-            url: "http://localhost:5000/getDir",
+            url: "http://"+app.config.serverIp+":"+app.config.serverPort+"/getDir",
             method: "GET",
         }).then((res)=>{
             console.log(res.data.res)
@@ -33,8 +35,29 @@ function Explorer(props) {
         }).catch((e)=>alert("Error querrying DB structure"))
     }
 
+    const analyze = (folder)=>{
+        setModal({text: "Loading...", state: true})
+        axios({
+            url: "http://"+app.config.serverIp+":"+app.config.serverPort+"/analyze",
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            data:{
+                folder: folder
+            }
+        }).then((res)=>{
+            console.log(res.data)
+            props.setContents(res.data.res)
+            setModal({text:"", state: false})
+        }).catch((e)=>console.log(e))
+    }
+
     return(
         <div className="explorer">
+            <Modal
+                modal={modal}
+                close={false}
+                setModal={setModal}
+            />
             <h1>Explorer</h1>
             {
                 dir?.map((dir, index)=>{
@@ -48,7 +71,7 @@ function Explorer(props) {
                                 dir.runs.map((run)=>{
                                     return(
                                         <div className="explorerFolder explorerRun">
-                                            <div className="explorerFolderTitle">
+                                            <div onClick={()=>analyze(dir.date+"/runs/"+run)} className="explorerFolderTitle">
                                                 <i className="material-icons">123</i>
                                                 <p>{run}</p>
                                             </div>

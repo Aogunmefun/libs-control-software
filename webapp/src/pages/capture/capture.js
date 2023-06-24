@@ -20,7 +20,7 @@ function Capture() {
 
     const getMap = ()=>{
         axios({
-            url:"http://localhost:5000/getMap",
+            url:"http://"+app.config.serverIp+":"+app.config.serverPort+"/getMap",
             method:"GET"
         }).then((res)=>{
             let temp = []

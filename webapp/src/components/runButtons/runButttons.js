@@ -2,16 +2,25 @@ import React, { useState, useEffect, useContext } from "react";
 import "./runButtons.css"
 import { Context } from "../../app";
 import axios from "axios"
+import Modal from "../../components/modal/modal";
 
 function RunButtons(props) {
     
     const app = useContext(Context)
+    const [modal, setModal] = useState({text: "Running...", state: false})
 
     const runAll = ()=>{
+        setModal({text: "Running...", state: true})
+        console.log(app.selected.filter((tray,index)=>tray.selected).map((tray,index)=>tray.index))
         axios({
-            url:"http://localhost:5000/runAll",
-            method:"GET"
+            url:"http://"+app.config.serverIp+":"+app.config.serverPort+"/runSelected",
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            data: {
+                indexes:app.selected.filter((tray,index)=>tray.selected).map((tray,index)=>tray.index)
+            }
         }).then((res)=>{
+            setModal({text:"", state: false})
             if (res.data.res) {
                 alert("Finished running")
             }
@@ -25,6 +34,11 @@ function RunButtons(props) {
 
     return(
         <div className="runButtons">
+            <Modal
+                modal={modal}
+                close={false}
+                setModal={setModal}
+            />
             {
                    
                 <button onClick={()=>runAll()} style={{}}>{ app.connected.some((item)=>!item.state)?"All devices must be conneted":"Run"}</button>

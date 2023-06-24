@@ -7,6 +7,7 @@ import RunButtons from "../runButtons/runButttons";
 function DataRun(props) {
     
     const app = useContext(Context)
+    
 
     return(
         <div className="dataRun">
@@ -22,7 +23,7 @@ function DataRun(props) {
                                 tray={tray}
                                 // setIndex={setIndex} 
                                 current = {app.index[0]===index?true:false}
-                                sampleind = {app.index[1]}  
+                                sampleind = {app.index[1]}
                                 />
                             )
                         })
