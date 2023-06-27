@@ -4,13 +4,27 @@ import pandas as pd
 import serial
 from datetime import date
 import json
+import cv2
 
+print("Initializing Application...")
 today = str(date.today()).split("-")[1]+"-"+str(date.today()).split("-")[2]+"-"+str(date.today()).split("-")[0]
-f = open('config.json')
+try:
+    f = open('config.json')
+except:
+    print("Config file not found")
 config = json.load(f)
 ip = config['serverIp']
 port = config['serverPort']
 drive = config['drive']
+cameraID = config['cameraID']
+# try:
+#     print("Initializing Camera...")
+#     vid = cv2.VideoCapture(cameraID)
+#     vid.set(3, 1280)
+#     vid.set(4, 720)
+#     print("Camera Initialized")
+# except:
+#     print("Camera failed to initialize")
 folder = drive+"LIBS DB/"+today+"/runs/"
 run = str(1)
 channel1 = 0
@@ -45,6 +59,14 @@ tower1 =  np.array([
 ])
 tower2 = np.array([
     [0,0]
+])
+#z,y,x
+picturePoints = np.array([
+    [0, -153, 68],
+    [0, -115, 68],
+    [0, -77, 68],
+    [0, -39, 68],
+    [0, -1, 68] 
 ])
 
 robot = socket.socket()

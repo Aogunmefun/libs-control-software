@@ -6,7 +6,10 @@ function Camera() {
 
     useEffect(()=>{
         let video = document.getElementById("camVideo"); // video is the id of video tag
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        navigator.mediaDevices.getUserMedia({ video: {
+            'deviceId': 0,
+            
+            }, audio: false })
             .then(function(stream) {
                 video.srcObject = stream;
                 video.play();

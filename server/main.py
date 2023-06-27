@@ -19,6 +19,7 @@ from twilio.rest import Client
 from dotenv import dotenv_values
 import csv
 from timeit import default_timer as timer
+import cv2
 
 env = dotenv_values(".env")
 
@@ -117,6 +118,7 @@ def newData2():
             globals.wavelengths = x
             os.makedirs(globals.folder+globals.run, exist_ok = True)
             with h5.File(globals.folder+globals.run+"/"+globals.fileName+".h5", "a") as f:
+                print("Creating Dataset")
                 f.create_dataset(
                     name  = "wavelength",
                     shape = globals.wavelengths.shape,
@@ -127,7 +129,7 @@ def newData2():
                     maxshape=(None, y.shape[1]),
                     shape=(0,y.shape[1])
                 )
-                # print("intnesityShape", f["intensity"].shape)
+                print("Created Dataset")
                 f["intensity"].resize((f["intensity"].shape[0] + y.shape[0]), axis = 0)
                 f["intensity"][f["intensity"].shape[0]-1:] = y
 
@@ -202,6 +204,28 @@ def startRoutine(tray, sample, name):
     globals.scan = True
     robotStopped = False
     globals.fileName = str(name)
+    # os.makedirs(globals.folder+globals.run, exist_ok = True)
+    # readyScanPosition()
+    # setPosition(globals.picturePoints[sample-1,:])
+    # pictureMove()
+    # sleep(5)
+    # count = 0
+    # startCamera = timer()
+    
+    # try:
+    #     while(count < 30):
+    #         ret, frame = globals.vid.read()
+    #         if ret:
+    #             if count > 5:
+    #                 cv2.imwrite(globals.folder+globals.run+"/"+globals.fileName+".png", frame)
+    #                 break
+    #         else:
+    #             continue
+    #         count = count + 1
+    # except:
+    #     print("Fialed to take picture. Make sure camera is properly initialized")
+    # endCamera = timer()
+    # globals.vid.release()
     # globals.fileName = name
     readyScanPosition()
     startScanMovement(sample,1)
@@ -285,6 +309,13 @@ def runAll():
         returnTray()
 
 def runSelected(indexes):
+    try:
+        print("Yo")
+        contents = os.listdir(globals.folder)
+        globals.run ="run"+str(int(contents[len(contents)-1][3:]) + 1)
+    except Exception as e:
+        # print(e)
+        globals.run="run1"
     # print(len(indexes))
     print("index", indexes)
     for ind in indexes:
@@ -298,6 +329,7 @@ def runSelected(indexes):
             
         readyScanPosition()
         tower1()
+        setPosition(globals.tower1[ind,:])
         returnTray()
 
 

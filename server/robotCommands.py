@@ -143,6 +143,14 @@ def startMap():
         if data == b'0':
             res = True
 
+def pictureMove():
+    robot.sendall(bytes(str(12), encoding="ascii"))
+    res = False
+    while not res:
+        data = robot.recv(1)
+        if data == b'0':
+            res = True
+
 def offRight():
     robot.sendall(bytes(str(4), encoding="ascii"))
     res = False
